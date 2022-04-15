@@ -38,14 +38,26 @@ app.get('/api/characters', (req: Request, res: Response) => {
   const query = "SELECT * FROM Characters";
   connection.query(query, (err, rows) => {
     if(err) throw err;
-
-    return res.send(rows);
+    const retVal = {
+      data: rows,
+      message: Array.isArray(rows) && rows.length === 0 ? "No records found" : null
+    }
+    return res.send(retVal);
   })
 })
 
 app.get('/api/characters/:id', (req: Request, res: Response) => {
   const id = req.params.id
-  res.send("It works with id " + id)
+
+  const query = `SELECT * FROM Characters WHERE ID = ${id} LIMIT 1`;
+  connection.query(query, (err, rows) => {
+    if(err) throw err;
+    const retVal = {
+      data: Array.isArray(rows) && rows.length > 0 ? rows[0] : null,
+      message: Array.isArray(rows) && rows.length === 0 ? "No record found" : null
+    }
+    return res.send(retVal);
+  })
 })
 
 const port = process.env.PORT || 3000;
