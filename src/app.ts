@@ -23,9 +23,6 @@ import 'dotenv/config';
 
 const app = express();
 
-const connectionString = process.env.DATABASE_URL || '';
-console.log(connectionString)
-
 var connection = mysql2.createConnection({
   host     : process.env.DATABASE_HOST,
   user     : process.env.DATABASE_USER,
