@@ -18,13 +18,21 @@ CREATE TABLE Characters (
 INSERT INTO Characters (id, name, species, image) VALUES (1, "Yan", "Cool", "asopdijasiodjasd")
 */
 import express, { Request, Response } from "express";
-import mysql from 'mysql';
+import mysql2 from 'mysql2';
+import 'dotenv/config';
 
 const app = express();
 
 const connectionString = process.env.DATABASE_URL || '';
-const connection = mysql.createConnection(connectionString);
-connection.connect();
+console.log(connectionString)
+
+var connection = mysql2.createConnection({
+  host     : process.env.DATABASE_HOST,
+  user     : process.env.DATABASE_USER,
+  password : process.env.DATABASE_PASSWORD,
+  database : process.env.DATABASE_NAME
+}); 
+connection.connect()
 
 app.get('/api/characters', (req: Request, res: Response) => {
   const query = "SELECT * FROM Characters";
@@ -33,8 +41,6 @@ app.get('/api/characters', (req: Request, res: Response) => {
 
     return res.send(rows);
   })
-
-  res.send("It works!")
 })
 
 app.get('/api/characters/:id', (req: Request, res: Response) => {
